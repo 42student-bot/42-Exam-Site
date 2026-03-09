@@ -139,11 +139,6 @@
     password.focus();
   });
 
-  forgot?.addEventListener("click", (e) => {
-    e.preventDefault();
-    setMsg("Fonction indisponible.", false);
-  });
-
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
     setMsg("");
