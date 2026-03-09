@@ -215,7 +215,7 @@ a{ color: inherit; -webkit-tap-highlight-color: transparent; }
 .check input:checked + .checkbox{ background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.25); }
 .check input:checked + .checkbox::after{ transform: translate(-50%, -60%) rotate(45deg) scale(0.8); }
 #registerForm .cta {
-  margin-top: 2.5rem; /* espace au-dessus du bouton, ajustable */
+  margin-top: -0.5rem; /* espace au-dessus du bouton, ajustable */
   display: inline-flex; /* conserve l’alignement des spans internes */
   justify-content: center; /* centrer le texte et la flèche */
 }

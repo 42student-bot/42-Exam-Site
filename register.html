@@ -11,34 +11,246 @@
   <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#000000">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <base href="/42-Exam-Site/" />
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
   <meta http-equiv="Cache-Control" content="no-store" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
-  <!-- Surcharge critique : empêche que styles.css bloque le scroll
-       avant même que fixes-mobile.css ou le JS soient chargés -->
   <style>
-    html, body {
+    /* ══════════════════════════════════════════════════
+       RESET COMPLET DU SCROLL POUR LA PAGE REGISTER
+       On écrase TOUT ce que styles.20260308-1.css pose :
+       overflow:hidden sur html, body, main.shell, .shell
+       ══════════════════════════════════════════════════ */
+
+    /* 1. html + body : scroll libre, hauteur naturelle */
+    html {
+      height: auto !important;
       overflow-y: auto !important;
       overflow-x: hidden !important;
-      height: auto !important;
+      overscroll-behavior: auto !important;
     }
-    main.shell {
-      overflow: visible !important;
+    body {
       height: auto !important;
+      min-height: 100dvh !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      overscroll-behavior: auto !important;
     }
-    /* Padding symétrique G/D : évite que overflow:hidden sur shell
-       rogne le box-shadow de focus côté gauche */
+
+    /* 2. Le shell redevient un simple bloc flex vertical,
+          plus de grid/height:100dvh/overflow:hidden */
+    main.shell,
     .shell {
-      padding-left: 20px !important;
-      padding-right: 20px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      width: 100% !important;
+      height: auto !important;
+      min-height: 100dvh !important;
+      overflow: visible !important;
+      padding: 28px 20px 60px !important;
+      box-sizing: border-box !important;
+    }
+
+    /* 3. Les pseudo-éléments spacers de fixes-mobile.css
+          (::before / ::after flex:1) ne doivent PAS être là
+          sur register — ils bloquent la card en hauteur fixe */
+    main.shell::before,
+    main.shell::after,
+    .shell::before,
+    .shell::after {
+      display: none !important;
+    }
+
+    /* 4. La card : largeur pleine, hauteur naturelle, jamais de clip */
+    .card {
+      width: min(560px, 100%) !important;
+      height: auto !important;
+      overflow: visible !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* ══════════════════════════════════════════════════
+       INDICATEUR FORCE MOT DE PASSE
+       ══════════════════════════════════════════════════ */
+    .pwd-hints {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height .38s cubic-bezier(.2,1,.2,1),
+                  opacity    .26s ease,
+                  margin-top .38s cubic-bezier(.2,1,.2,1);
+      margin-top: 0;
+    }
+    .pwd-hints.is-open {
+      /* assez grand pour les 4 règles + barre */
+      max-height: 200px;
+      opacity: 1;
+      margin-top: 9px;
+    }
+    .pwd-rules {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(247,248,255,.10);
+      border-radius: 10px;
+    }
+    .pwd-rule {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-family: var(--mono);
+      color: rgba(247,248,255,.48);
+      transition: color .22s ease;
+    }
+    .pwd-rule__icon {
+      width: 15px; height: 15px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      border: 1.5px solid rgba(247,248,255,.22);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .22s ease, border-color .22s ease;
+      position: relative;
+    }
+    .pwd-rule__icon::after {
+      content: "";
+      position: absolute;
+      width: 5px; height: 8px;
+      border: solid transparent;
+      border-width: 0 1.5px 1.5px 0;
+      transform: rotate(45deg) translate(-1px,-1px);
+      transition: border-color .22s ease;
+    }
+    .pwd-rule.is-ok                 { color: rgba(120,220,160,.92); }
+    .pwd-rule.is-ok .pwd-rule__icon {
+      background: rgba(120,220,160,.16);
+      border-color: rgba(120,220,160,.58);
+    }
+    .pwd-rule.is-ok .pwd-rule__icon::after { border-color: rgba(120,220,160,.92); }
+
+    .pwd-strength {
+      display: flex; gap: 4px; margin-top: 7px;
+    }
+    .pwd-strength__bar {
+      flex: 1; height: 3px; border-radius: 99px;
+      background: rgba(247,248,255,.10);
+      transition: background .3s ease;
+    }
+    .pwd-strength__bar.s1 { background: rgba(255,80,80,.75); }
+    .pwd-strength__bar.s2 { background: rgba(255,175,50,.75); }
+    .pwd-strength__bar.s3 { background: rgba(120,220,160,.75); }
+    .pwd-strength__bar.s4 { background: rgba(80,200,255,.75); }
+
+    /* ══════════════════════════════════════════════════
+       CONFIRMATION MOT DE PASSE
+       ══════════════════════════════════════════════════ */
+    .confirm-status {
+      font-size: 11.5px;
+      font-family: var(--mono);
+      margin-top: 5px;
+      min-height: 16px;
+      line-height: 1.4;
+    }
+    .confirm-status.match    { color: rgba(120,220,160,.92); }
+    .confirm-status.no-match { color: rgba(255,95,95,.88); }
+
+    /* ══════════════════════════════════════════════════
+       BOUTON DÉSACTIVÉ
+       ══════════════════════════════════════════════════ */
+    .cta:disabled,
+    .cta[aria-disabled="true"] {
+      opacity: .36 !important;
+      cursor: not-allowed !important;
+      pointer-events: none !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    /* ══════════════════════════════════════════════════
+       VUE VÉRIFICATION EMAIL (OTP)
+       ══════════════════════════════════════════════════ */
+    .view--verify {
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .verify-icon {
+      display: flex; justify-content: center;
+      align-items: center; margin: 4px auto 0;
+    }
+    .verify-icon svg { width: 52px; height: 52px; display: block; }
+    .verify-intro   { text-align: center; margin: 0 0 4px; }
+    .verify-title {
+      margin: 0 0 8px;
+      font-size: clamp(17px,2.2vw,19px);
+      font-weight: 700; letter-spacing: -.2px;
+    }
+    .verify-desc {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 13.5px; line-height: 1.55;
+    }
+    .verify-email-tag {
+      color: rgba(175,205,255,.92);
+      font-weight: 600; font-style: normal;
+      word-break: break-all;
+    }
+    .otp-row {
+      display: flex; gap: 8px; justify-content: center;
+    }
+    .otp-cell {
+      width: 42px; height: 52px;
+      text-align: center;
+      font-size: 22px; font-weight: 700;
+      background: rgba(0,0,0,.42);
+      border: 1px solid rgba(247,248,255,.14);
+      border-radius: 10px;
+      color: var(--text);
+      outline: none;
+      caret-color: transparent;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+    .otp-cell:focus {
+      border-color: rgba(175,205,255,.55);
+      box-shadow: var(--focus);
+    }
+    .otp-cell.filled { border-color: rgba(120,220,160,.45); }
+    @media (max-width:380px) {
+      .otp-cell { width:35px; height:44px; font-size:17px; }
+      .otp-row  { gap:5px; }
+    }
+    .verify-msg {
+      font-size: 12px; font-family: var(--mono);
+      min-height: 16px; text-align: center;
+    }
+    .verify-msg.is-bad { color: rgba(255,95,95,.92); }
+    .verify-msg.is-ok  { color: rgba(120,220,160,.92); }
+
+    @keyframes otpShake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-5px); }
+      40%     { transform: translateX(5px); }
+      60%     { transform: translateX(-4px); }
+      80%     { transform: translateX(4px); }
+    }
+    .otp-cell.is-error {
+      animation: otpShake .45s cubic-bezier(.2,1,.2,1) both;
+      border-color: rgba(255,80,80,.7) !important;
+      box-shadow: 0 0 0 3px rgba(255,80,80,.12) !important;
+    }
+
+    .views[data-view="register"] .view--register,
+    .views[data-view="verify"]   .view--verify {
+      position: relative; opacity: 1;
+      transform: none; pointer-events: auto;
     }
   </style>
 </head>
 <body>
-  <main class="shell shell--scroll">
+  <main class="shell">
     <section class="card" aria-label="Inscription">
       <header class="brand">
         <img class="brand__logo" src="42.jpg" alt="Logo 42" width="58" height="58" />
@@ -50,16 +262,23 @@
 
       <div class="divider" role="separator" aria-hidden="true"></div>
 
-      <div class="views" data-view="register">
+      <div class="views" id="regViews" data-view="register">
+
+        <!-- ── Vue 1 : formulaire d'inscription ── -->
         <form id="registerForm" class="form view view--register" autocomplete="on" novalidate>
+
           <label class="field" style="--i:0">
             <span class="field__label">Prénom</span>
-            <input class="field__input" id="firstName" name="firstName" type="text" placeholder="ex: Jeanne" required minlength="2" />
+            <input class="field__input" id="firstName" name="firstName" type="text"
+              placeholder="ex: Jeanne" required minlength="2"
+              autocomplete="given-name" autocapitalize="words" />
           </label>
 
           <label class="field" style="--i:1">
             <span class="field__label">Nom</span>
-            <input class="field__input" id="lastName" name="lastName" type="text" placeholder="ex: Dupont" required minlength="2" />
+            <input class="field__input" id="lastName" name="lastName" type="text"
+              placeholder="ex: Dupont" required minlength="2"
+              autocomplete="family-name" autocapitalize="words" />
           </label>
 
           <label class="field" style="--i:2">
@@ -69,30 +288,114 @@
 
           <label class="field" style="--i:3">
             <span class="field__label">Adresse email</span>
-            <input class="field__input" id="email" name="email" type="email" placeholder="ex: jeanne@exemple.com" required autocomplete="email" />
+            <input class="field__input" id="email" name="email" type="email"
+              placeholder="ex: jeanne@exemple.com" required autocomplete="email" />
           </label>
 
-          <label class="field" style="--i:4">
+          <!-- Mot de passe + indicateur de force -->
+          <div class="field" style="--i:4">
             <span class="field__label">Mot de passe</span>
-            <input class="field__input" id="regPassword" name="regPassword" type="password" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
-          </label>
+            <input class="field__input" id="regPassword" name="regPassword" type="password"
+              placeholder="••••••••" required minlength="8" autocomplete="new-password" />
+            <div class="pwd-hints" id="pwdHints" aria-live="polite">
+              <div class="pwd-rules">
+                <div class="pwd-rule" id="rule-len">
+                  <span class="pwd-rule__icon"></span><span>8 caractères minimum</span>
+                </div>
+                <div class="pwd-rule" id="rule-upper">
+                  <span class="pwd-rule__icon"></span><span>1 majuscule</span>
+                </div>
+                <div class="pwd-rule" id="rule-digit">
+                  <span class="pwd-rule__icon"></span><span>1 chiffre</span>
+                </div>
+                <div class="pwd-rule" id="rule-special">
+                  <span class="pwd-rule__icon"></span><span>1 caractère spécial (!@#$…)</span>
+                </div>
+              </div>
+              <div class="pwd-strength">
+                <div class="pwd-strength__bar" id="sbar1"></div>
+                <div class="pwd-strength__bar" id="sbar2"></div>
+                <div class="pwd-strength__bar" id="sbar3"></div>
+                <div class="pwd-strength__bar" id="sbar4"></div>
+              </div>
+            </div>
+          </div>
 
-          <button class="cta" type="submit" style="--i:5">
+          <!-- Confirmation mot de passe -->
+          <div class="field" style="--i:5">
+            <span class="field__label">Confirmer le mot de passe</span>
+            <input class="field__input" id="regPasswordConfirm" name="regPasswordConfirm"
+              type="password" placeholder="••••••••" required autocomplete="new-password" />
+            <p class="confirm-status" id="confirmStatus" aria-live="polite"></p>
+          </div>
+
+          <button class="cta" type="submit" id="submitBtn" style="--i:6" disabled aria-disabled="true">
             <span>Créer mon compte</span>
             <span class="cta__arrow" aria-hidden="true">→</span>
           </button>
 
-          <p class="error" id="registerMsg" role="status" aria-live="polite" style="--i:6"></p>
+          <p class="error" id="registerMsg" role="status" aria-live="polite" style="--i:7"></p>
 
-          <div class="switchRow" aria-label="Retour connexion" style="--i:7">
+          <div class="switchRow" aria-label="Retour connexion" style="--i:8">
             <span class="switchRow__txt">Déjà un compte ?</span>
             <button class="linkbtn" type="button" id="backToLogin">Se connecter</button>
           </div>
         </form>
-      </div>
+
+        <!-- ── Vue 2 : vérification email (OTP) ── -->
+        <div id="verifyView" class="view view--verify" aria-hidden="true">
+
+          <div class="verify-icon" style="--i:0" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="23" stroke="rgba(175,205,255,.18)" stroke-width="1.5"/>
+              <path d="M8 16h32v18a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V16Z"
+                stroke="rgba(175,205,255,.70)" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M8 16l16 13L40 16"
+                stroke="rgba(175,205,255,.70)" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <div class="verify-intro" style="--i:1">
+            <h2 class="verify-title">Vérifiez votre email</h2>
+            <p class="verify-desc">Un code à 6 chiffres a été envoyé à<br>
+              <strong class="verify-email-tag" id="verifyEmailDisplay"></strong></p>
+            <p class="verify-desc" style="font-size:12px;color:var(--muted2);font-family:var(--mono)">
+              Vérifiez vos spams si vous ne le recevez pas.</p>
+          </div>
+
+          <div class="otp-row" id="otpRow" style="--i:2"
+               role="group" aria-label="Code de vérification">
+            <input class="otp-cell" type="text" inputmode="numeric"
+              maxlength="1" pattern="[0-9]" aria-label="Chiffre 1" />
+            <input class="otp-cell" type="text" inputmode="numeric"
+              maxlength="1" pattern="[0-9]" aria-label="Chiffre 2" />
+            <input class="otp-cell" type="text" inputmode="numeric"
+              maxlength="1" pattern="[0-9]" aria-label="Chiffre 3" />
+            <input class="otp-cell" type="text" inputmode="numeric"
+              maxlength="1" pattern="[0-9]" aria-label="Chiffre 4" />
+            <input class="otp-cell" type="text" inputmode="numeric"
+              maxlength="1" pattern="[0-9]" aria-label="Chiffre 5" />
+            <input class="otp-cell" type="text" inputmode="numeric"
+              maxlength="1" pattern="[0-9]" aria-label="Chiffre 6" />
+          </div>
+
+          <p class="verify-msg" id="verifyMsg" role="status" aria-live="polite" style="--i:3"></p>
+
+          <button class="cta" type="button" id="verifyBtn" style="--i:4" disabled>
+            <span>Valider mon compte</span>
+          </button>
+
+          <div class="switchRow" style="--i:5">
+            <span class="switchRow__txt">Pas reçu ?</span>
+            <button class="linkbtn" type="button" id="resendCodeBtn">Renvoyer le code</button>
+          </div>
+
+        </div>
+      </div><!-- /.views -->
     </section>
   </main>
 
-  <script defer src="assets/register.20260308-1.js"></script>
+  <script type="module" src="assets/register.20260308-1.js"></script>
 </body>
 </html>

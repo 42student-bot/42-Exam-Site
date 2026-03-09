@@ -266,30 +266,4 @@
     });
   }
   backToLogin?.addEventListener("click", showLogin);
-
-  registerForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    setRegisterMsg("");
-
-    const fn = (firstName?.value || "").trim();
-    const ln = (lastName?.value || "").trim();
-    const bd = (birthdate?.value || "").trim();
-    const em = (email?.value || "").trim();
-    const pw = regPassword?.value || "";
-
-    if (fn.length < 2) return setRegisterMsg("Prénom trop court (min 2).", false);
-    if (ln.length < 2) return setRegisterMsg("Nom trop court (min 2).", false);
-    if (!bd) return setRegisterMsg("Date de naissance requise.", false);
-    if (!/^\S+@\S+\.\S+$/.test(em)) return setRegisterMsg("Email invalide.", false);
-    if (pw.length < 6) return setRegisterMsg("Mot de passe trop court (min 6).", false);
-
-    // front-only: prefill login with email and go back
-    if (login) login.value = em;
-    setRegisterMsg("Compte créé. Vous pouvez vous connecter.", true);
-
-    window.setTimeout(() => {
-      regPassword.value = "";
-      showLogin();
-    }, 520);
-  });
 })();
