@@ -1,83 +1,84 @@
 /* =====================================================
    fixes-mobile.css — correctifs mobile
-   À inclure APRÈS styles.20260308-1.css dans les deux pages
+   À inclure APRÈS styles.20260308-1.css dans toutes les pages
    ===================================================== */
 
-/* ── 1. PAGE CONNEXION : card verticalement centrée ──
-   Le shell en grid place-items:center + overflow:hidden
-   décale la card quand le clavier virtuel s'ouvre.
-   On passe à flexbox avec align-items:safe center pour
-   garder le centrage ET permettre le scroll si besoin. */
+/* ── shell : remplace le grid/overflow:hidden du CSS original ── */
 .shell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: safe center; /* fallback: flex-start sur les vieux moteurs */
-  height: 100dvh;
-  overflow-y: auto;
+  justify-content: center;
+  min-height: 100dvh;
+  height: auto;           /* écrase height:100dvh du CSS original */
   overflow-x: hidden;
-  padding: 20px 16px;
+  overflow-y: auto;       /* écrase overflow:hidden du CSS original */
+  padding: 20px 20px 40px; /* symétrique G/D pour focus visible des deux côtés */
+  box-sizing: border-box;
 }
 
-/* ── 2. PAGE INSCRIPTION : focus non rogné à gauche ──
-   overflow:hidden sur .shell coupe le box-shadow de focus.
-   Le padding + margin compensent l'espace pour le glow. */
-.shell {
-  padding-left: 20px;   /* symétrique gauche/droite */
-  padding-right: 20px;
+/* main.shell : écrase overflow:hidden posé sur main.shell dans styles.css */
+main.shell {
+  overflow: visible;
+  height: auto;
 }
 
+/* ── card : marge pour que le glow de focus ne soit pas rogné ── */
 .card {
-  overflow: visible;    /* le glow de focus peut déborder */
-  /* margin horizontal pour que le focus shadow ne soit pas rogné */
+  overflow: visible;
   margin-left: 4px;
   margin-right: 4px;
   width: min(560px, calc(100% - 8px));
 }
 
-/* ── 3. PAGE INSCRIPTION : scroll jusqu'au bout de la card ──
-   Ajouter du padding-bottom au shell pour que le dernier
-   élément ne soit pas collé au bas de l'écran. */
-.shell {
-  padding-bottom: 32px;
+/* ── Page CONNEXION : card centrée verticalement ──
+   Les pseudo-éléments poussent la card au milieu
+   sans bloquer le scroll si nécessaire. */
+.shell::before,
+.shell::after {
+  content: "";
+  flex: 1;
+  min-height: 0;
 }
 
-/* ── Correctif iOS : safe center fallback ──
-   "safe center" n'est pas supporté partout.
-   Sur mobile on préfère aligner en haut avec un padding auto. */
+/* ── Page INSCRIPTION : pas de spacers, scroll libre ──
+   .shell--scroll désactive les spacers et laisse
+   la card s'étendre naturellement. */
+.shell--scroll::before,
+.shell--scroll::after {
+  display: none;
+}
+
+.shell--scroll {
+  justify-content: flex-start;
+  padding-top: 24px;
+  padding-bottom: 48px;   /* espace sous la card pour voir le bas */
+}
+
+/* ── body/html : écrase les overflow:hidden du CSS original ──
+   On cible uniquement la page inscription via la classe
+   body.page-register posée par le JS register. */
+body.page-register {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100dvh !important;
+}
+
+body.page-register html {
+  overflow: auto !important;
+}
+
+/* ── Correctifs iOS safe-area ── */
 @media (max-width: 520px) {
   .shell {
-    justify-content: flex-start;
     padding-top: max(20px, env(safe-area-inset-top, 20px));
-    padding-bottom: max(32px, env(safe-area-inset-bottom, 32px));
-    /* centrage vertical quand le contenu est plus petit que l'écran */
-    min-height: 100dvh;
-  }
-
-  /* Pousser la card vers le centre verticalement sur la page connexion
-     en ajoutant un spacer flex automatique */
-  .shell::before {
-    content: "";
-    flex: 1;
-    min-height: 0;
-  }
-
-  .shell::after {
-    content: "";
-    flex: 1;
-    min-height: 0;
-  }
-
-  /* Sur la page inscription la card doit scroller librement,
-     on retire les spacers flex via une classe spécifique */
-  .shell--scroll::before,
-  .shell--scroll::after {
-    display: none;
+    padding-bottom: max(40px, env(safe-area-inset-bottom, 40px));
   }
 
   .shell--scroll {
-    justify-content: flex-start;
-    align-items: center;
+    padding-top: max(24px, env(safe-area-inset-top, 24px));
+    padding-bottom: max(48px, env(safe-area-inset-bottom, 48px));
   }
 }
 
@@ -86,7 +87,6 @@
    Styles spécifiques : page mot de passe oublié
    ===================================================== */
 
-/* Icône centrale */
 .forgot-icon {
   display: flex;
   justify-content: center;
@@ -99,7 +99,6 @@
   display: block;
 }
 
-/* Animation pulse subtile sur l'icône check */
 .forgot-icon--ok svg circle {
   animation: pulseRing 1.8s cubic-bezier(.4,0,.2,1) 0.3s both;
 }
@@ -109,7 +108,6 @@
   100% { stroke-width: 1.5; opacity: 1; r: 23; }
 }
 
-/* Bloc intro texte */
 .forgot-intro {
   text-align: center;
   margin: 0 0 4px;
@@ -133,7 +131,6 @@
   margin-top: 4px;
 }
 
-/* Email masqué dans la vue confirmation */
 .sent-email {
   color: rgba(175,205,255,.9);
   font-weight: 600;
@@ -141,14 +138,12 @@
   word-break: break-all;
 }
 
-/* Désactiver visuellement le bouton renvoyer pendant cooldown */
 #resendBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-/* Animation staggered pour les éléments forgot-icon et forgot-intro */
 .view.is-enter .forgot-icon,
 .view.is-enter .forgot-intro {
   animation: itemIn 520ms cubic-bezier(.2,1,.2,1) both;
@@ -157,7 +152,6 @@
   transform: translateY(10px) scale(.98);
 }
 
-/* Vue "sent" : data-view="sent" → .view--sent visible */
 .views[data-view="sent"] .view--sent {
   position: relative;
   opacity: 1;
@@ -171,7 +165,6 @@
   pointer-events: auto;
 }
 
-/* Gap entre éléments du form forgot */
 .view--request,
 .view--sent {
   display: flex;

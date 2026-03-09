@@ -16,6 +16,26 @@
   <meta http-equiv="Cache-Control" content="no-store" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
+
+  <!-- Surcharge critique : empêche que styles.css bloque le scroll
+       avant même que fixes-mobile.css ou le JS soient chargés -->
+  <style>
+    html, body {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      height: auto !important;
+    }
+    main.shell {
+      overflow: visible !important;
+      height: auto !important;
+    }
+    /* Padding symétrique G/D : évite que overflow:hidden sur shell
+       rogne le box-shadow de focus côté gauche */
+    .shell {
+      padding-left: 20px !important;
+      padding-right: 20px !important;
+    }
+  </style>
 </head>
 <body>
   <main class="shell shell--scroll">
