@@ -134,10 +134,7 @@
     password.focus();
   });
 
-  forgot?.addEventListener("click", (e) => {
-    e.preventDefault();
-    setMsg("Fonction indisponible.", false);
-  });
+  // "Mot de passe oublié ?" → navigation vers forgot.html (href natif, pas de JS)
 
   form?.addEventListener("submit", (e) => {
     e.preventDefault();

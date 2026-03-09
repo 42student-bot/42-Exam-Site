@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Examen42 Portal — Mot de passe oublié</title>
+  <meta name="description" content="Portail d'accès Examen 42 — Réinitialisation du mot de passe." />
+  <link rel="icon" href="42.jpg" />
+  <link rel="stylesheet" href="assets/styles.20260308-1.css" />
+  <link rel="stylesheet" href="assets/fixes-mobile.css" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <base href="/42-Exam-Site/" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+</head>
+<body>
+  <main class="shell">
+    <section class="card" aria-label="Mot de passe oublié">
+      <header class="brand">
+        <img class="brand__logo" src="42.jpg" alt="Logo 42" width="58" height="58" />
+        <div class="brand__text">
+          <h1 class="brand__title">Examen42 Portal</h1>
+          <p class="brand__subtitle">Accès sécurisé — examens de code</p>
+        </div>
+      </header>
+
+      <div class="divider" role="separator" aria-hidden="true"></div>
+
+      <!-- Vue 1 : saisie de l'email -->
+      <div class="views" id="views" data-view="request">
+
+        <form id="requestForm" class="form view view--request" autocomplete="on" novalidate>
+
+          <div class="forgot-icon" style="--i:0" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="23" stroke="rgba(175,205,255,.18)" stroke-width="1.5"/>
+              <path d="M24 14a5 5 0 0 1 5 5c0 3-3 4.5-3 7h-4c0-3.5 3-4.5 3-7a1 1 0 1 0-2 0" stroke="rgba(175,205,255,.70)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="24" cy="30.5" r="0" fill="rgba(175,205,255,.70)"/>
+              <rect x="22" y="29" width="4" height="4" rx="2" fill="rgba(175,205,255,.70)"/>
+            </svg>
+          </div>
+
+          <div class="forgot-intro" style="--i:1">
+            <h2 class="forgot-title">Mot de passe oublié ?</h2>
+            <p class="forgot-desc">Saisissez votre adresse email. Si un compte existe, vous recevrez un lien de réinitialisation.</p>
+          </div>
+
+          <label class="field" style="--i:2">
+            <span class="field__label">Adresse email</span>
+            <input class="field__input" id="forgotEmail" name="email" type="email"
+              placeholder="ex: jeanne@exemple.com" required autocomplete="email" />
+          </label>
+
+          <button class="cta" type="submit" style="--i:3">
+            <span>Envoyer le lien</span>
+            <span class="cta__arrow" aria-hidden="true">→</span>
+          </button>
+
+          <p class="error" id="requestMsg" role="status" aria-live="polite" style="--i:4"></p>
+
+          <div class="switchRow" style="--i:5">
+            <span class="switchRow__txt">Vous vous souvenez ?</span>
+            <button class="linkbtn" type="button" id="backToLoginBtn">Se connecter</button>
+          </div>
+
+        </form>
+
+        <!-- Vue 2 : confirmation envoi -->
+        <div id="sentView" class="view view--sent" aria-hidden="true">
+
+          <div class="forgot-icon forgot-icon--ok" style="--i:0" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="23" stroke="rgba(120,220,160,.22)" stroke-width="1.5"/>
+              <path d="M15 24.5l6.5 6.5L33 18" stroke="rgba(120,220,160,.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <div class="forgot-intro" style="--i:1">
+            <h2 class="forgot-title">Email envoyé !</h2>
+            <p class="forgot-desc">Si l'adresse <strong id="sentEmail" class="sent-email"></strong> correspond à un compte, un lien de réinitialisation vient d'être envoyé.</p>
+            <p class="forgot-desc forgot-desc--muted">Pensez à vérifier vos spams.</p>
+          </div>
+
+          <button class="cta" type="button" id="resendBtn" style="--i:2">
+            <span>Renvoyer un lien</span>
+          </button>
+
+          <p class="error" id="resendMsg" role="status" aria-live="polite" style="--i:3"></p>
+
+          <div class="switchRow" style="--i:4">
+            <span class="switchRow__txt">Retour à l'accueil</span>
+            <button class="linkbtn" type="button" id="backToLoginBtn2">Se connecter</button>
+          </div>
+
+        </div>
+
+      </div><!-- /.views -->
+
+    </section>
+  </main>
+
+  <script defer src="assets/forgot.20260308-1.js"></script>
+</body>
+</html>

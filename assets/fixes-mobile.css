@@ -80,3 +80,101 @@
     align-items: center;
   }
 }
+
+
+/* =====================================================
+   Styles spécifiques : page mot de passe oublié
+   ===================================================== */
+
+/* Icône centrale */
+.forgot-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4px auto 0;
+}
+.forgot-icon svg {
+  width: 52px;
+  height: 52px;
+  display: block;
+}
+
+/* Animation pulse subtile sur l'icône check */
+.forgot-icon--ok svg circle {
+  animation: pulseRing 1.8s cubic-bezier(.4,0,.2,1) 0.3s both;
+}
+@keyframes pulseRing {
+  0%   { stroke-width: 1.5; opacity: 0; r: 18; }
+  40%  { opacity: 1; }
+  100% { stroke-width: 1.5; opacity: 1; r: 23; }
+}
+
+/* Bloc intro texte */
+.forgot-intro {
+  text-align: center;
+  margin: 0 0 4px;
+}
+.forgot-title {
+  margin: 0 0 8px;
+  font-size: clamp(17px, 2.2vw, 19px);
+  font-weight: 700;
+  letter-spacing: -.2px;
+}
+.forgot-desc {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.forgot-desc--muted {
+  font-size: 12px;
+  color: var(--muted2);
+  font-family: var(--mono);
+  margin-top: 4px;
+}
+
+/* Email masqué dans la vue confirmation */
+.sent-email {
+  color: rgba(175,205,255,.9);
+  font-weight: 600;
+  font-style: normal;
+  word-break: break-all;
+}
+
+/* Désactiver visuellement le bouton renvoyer pendant cooldown */
+#resendBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Animation staggered pour les éléments forgot-icon et forgot-intro */
+.view.is-enter .forgot-icon,
+.view.is-enter .forgot-intro {
+  animation: itemIn 520ms cubic-bezier(.2,1,.2,1) both;
+  animation-delay: calc((var(--i, 0)) * 60ms + 90ms);
+  opacity: 0;
+  transform: translateY(10px) scale(.98);
+}
+
+/* Vue "sent" : data-view="sent" → .view--sent visible */
+.views[data-view="sent"] .view--sent {
+  position: relative;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.views[data-view="request"] .view--request {
+  position: relative;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Gap entre éléments du form forgot */
+.view--request,
+.view--sent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
