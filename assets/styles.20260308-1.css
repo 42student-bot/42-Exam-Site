@@ -311,7 +311,6 @@ body.no-scroll {
     position: relative;       /* assure que le scroll fonctionne */
     display: block;
     max-height: 100vh;        /* ne dépasse pas la hauteur de l'écran */
-    overflow-y: scroll;       /* scroll uniquement sur le formulaire */
     -webkit-overflow-scrolling: touch; /* scroll fluide iOS */
     padding-right: 5px;       /* pour éviter que la barre de scroll soit coupée */
   }
