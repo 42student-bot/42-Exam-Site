@@ -1,0 +1,82 @@
+/* =====================================================
+   fixes-mobile.css — correctifs mobile
+   À inclure APRÈS styles.20260308-1.css dans les deux pages
+   ===================================================== */
+
+/* ── 1. PAGE CONNEXION : card verticalement centrée ──
+   Le shell en grid place-items:center + overflow:hidden
+   décale la card quand le clavier virtuel s'ouvre.
+   On passe à flexbox avec align-items:safe center pour
+   garder le centrage ET permettre le scroll si besoin. */
+.shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center; /* fallback: flex-start sur les vieux moteurs */
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 16px;
+}
+
+/* ── 2. PAGE INSCRIPTION : focus non rogné à gauche ──
+   overflow:hidden sur .shell coupe le box-shadow de focus.
+   Le padding + margin compensent l'espace pour le glow. */
+.shell {
+  padding-left: 20px;   /* symétrique gauche/droite */
+  padding-right: 20px;
+}
+
+.card {
+  overflow: visible;    /* le glow de focus peut déborder */
+  /* margin horizontal pour que le focus shadow ne soit pas rogné */
+  margin-left: 4px;
+  margin-right: 4px;
+  width: min(560px, calc(100% - 8px));
+}
+
+/* ── 3. PAGE INSCRIPTION : scroll jusqu'au bout de la card ──
+   Ajouter du padding-bottom au shell pour que le dernier
+   élément ne soit pas collé au bas de l'écran. */
+.shell {
+  padding-bottom: 32px;
+}
+
+/* ── Correctif iOS : safe center fallback ──
+   "safe center" n'est pas supporté partout.
+   Sur mobile on préfère aligner en haut avec un padding auto. */
+@media (max-width: 520px) {
+  .shell {
+    justify-content: flex-start;
+    padding-top: max(20px, env(safe-area-inset-top, 20px));
+    padding-bottom: max(32px, env(safe-area-inset-bottom, 32px));
+    /* centrage vertical quand le contenu est plus petit que l'écran */
+    min-height: 100dvh;
+  }
+
+  /* Pousser la card vers le centre verticalement sur la page connexion
+     en ajoutant un spacer flex automatique */
+  .shell::before {
+    content: "";
+    flex: 1;
+    min-height: 0;
+  }
+
+  .shell::after {
+    content: "";
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Sur la page inscription la card doit scroller librement,
+     on retire les spacers flex via une classe spécifique */
+  .shell--scroll::before,
+  .shell--scroll::after {
+    display: none;
+  }
+
+  .shell--scroll {
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
