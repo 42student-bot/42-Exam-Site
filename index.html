@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Examen42 Portal — Connexion</title>
+  <meta name="description" content="Portail d'accès Examen 42 — Connexion." />
+  <link rel="icon" href="42.jpg" />
+  <link rel="stylesheet" href="assets/styles.20260308-1.css" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <base href="/42-Exam-Site/" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+</head>
+<body>
+  <main class="shell">
+    <section class="card" aria-label="Connexion">
+      <header class="brand">
+        <img class="brand__logo" src="42.jpg" alt="Logo 42" width="58" height="58" />
+        <div class="brand__text">
+          <h1 class="brand__title">Examen42 Portal</h1>
+          <p class="brand__subtitle">Accès sécurisé — examens de code</p>
+        </div>
+      </header>
+
+      <div class="divider" role="separator" aria-hidden="true"></div>
+
+      <div class="views" data-view="login">
+        <form id="loginForm" class="form view view--login" autocomplete="on">
+          <label class="field" style="--i:0">
+            <span class="field__label">Identifiant</span>
+            <input class="field__input" id="login" name="login" type="text" inputmode="text" placeholder="ex: jdupont" required minlength="2" />
+          </label>
+
+          <label class="field" style="--i:1">
+            <span class="field__label">Mot de passe</span>
+            <div class="field__row field__row--pwd">
+              <input class="field__input field__input--pwd" id="password" name="password" type="password" placeholder="••••••••" required minlength="6" />
+              <button class="pwdToggle" type="button" id="togglePwd" aria-label="Afficher le mot de passe" aria-pressed="false">
+                <span class="sr-only">Afficher</span>
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M12 5c5.5 0 9.7 4.1 11 7-1.3 2.9-5.5 7-11 7S2.3 14.9 1 12c1.3-2.9 5.5-7 11-7Zm0 2C7.7 7 4.2 9.9 3.1 12 4.2 14.1 7.7 17 12 17s7.8-2.9 8.9-5C19.8 9.9 16.3 7 12 7Zm0 2.5A2.5 2.5 0 1 1 9.5 12 2.5 2.5 0 0 1 12 9.5Z"/>
+                </svg>
+              </button>
+            </div>
+          </label>
+
+          <div class="login-options">
+            <label class="check">
+              <input id="remember" type="checkbox" checked />
+              <span class="checkbox"></span>
+              <span>Rester connecté</span>
+            </label>
+            <a class="link helpLink" href="#" id="forgot">Mot de passe oublié ?</a>
+          </div>
+
+          <p class="signup">
+            Pas de compte ? <a href="register.html" id="goRegister">Créer un compte</a>
+          </p>
+
+          <button class="cta">
+            Se connecter
+          </button>
+
+          <p class="error" id="error" role="status" aria-live="polite" style="--i:5"></p>
+
+          <footer class="fineprint" style="--i:6">
+            <span>© <span id="year"></span> Examen42 Portal</span>
+            <span class="dot">•</span>
+            <span>Accès</span>
+          </footer>
+        </form>
+      </div>
+
+      <section id="dashboard" class="dash" hidden aria-label="Tableau de bord">
+        <div class="dash__top">
+          <div>
+            <h2 class="dash__title">Bienvenue, <span id="userLogin"></span></h2>
+            <p class="dash__subtitle">Connexion réussie.</p>
+          </div>
+          <button class="ghost" id="logout">Se déconnecter</button>
+        </div>
+        <div class="dash__grid">
+          <article class="panel">
+            <h3 class="panel__title">Statut</h3>
+            <p class="panel__value">Prêt</p>
+            <p class="panel__meta">Interface statique — à brancher sur une API plus tard.</p>
+          </article>
+          <article class="panel">
+            <h3 class="panel__title">Thème</h3>
+            <p class="panel__value">Noir / Blanc</p>
+            <p class="panel__meta">Contraste élevé, typographie nette.</p>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script defer src="assets/login.20260308-1.js"></script>
+</body>
+</html>

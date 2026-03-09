@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Examen42 Portal — Créer un compte</title>
+  <meta name="description" content="Portail d'accès Examen 42 — Inscription." />
+  <link rel="icon" href="42.jpg" />
+  <link rel="stylesheet" href="assets/styles.20260308-1.css" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <base href="/42-Exam-Site/" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+</head>
+<body>
+  <main class="shell">
+    <section class="card" aria-label="Inscription">
+      <header class="brand">
+        <img class="brand__logo" src="42.jpg" alt="Logo 42" width="58" height="58" />
+        <div class="brand__text">
+          <h1 class="brand__title">Examen42 Portal</h1>
+          <p class="brand__subtitle">Accès sécurisé — examens de code</p>
+        </div>
+      </header>
+
+      <div class="divider" role="separator" aria-hidden="true"></div>
+
+      <div class="views" data-view="register">
+        <form id="registerForm" class="form view view--register" autocomplete="on" novalidate>
+          <label class="field" style="--i:0">
+            <span class="field__label">Prénom</span>
+            <input class="field__input" id="firstName" name="firstName" type="text" placeholder="ex: Jeanne" required minlength="2" />
+          </label>
+
+          <label class="field" style="--i:1">
+            <span class="field__label">Nom</span>
+            <input class="field__input" id="lastName" name="lastName" type="text" placeholder="ex: Dupont" required minlength="2" />
+          </label>
+
+          <label class="field" style="--i:2">
+            <span class="field__label">Date de naissance</span>
+            <input class="field__input" id="birthdate" name="birthdate" type="date" required />
+          </label>
+
+          <label class="field" style="--i:3">
+            <span class="field__label">Adresse email</span>
+            <input class="field__input" id="email" name="email" type="email" placeholder="ex: jeanne@exemple.com" required autocomplete="email" />
+          </label>
+
+          <label class="field" style="--i:4">
+            <span class="field__label">Mot de passe</span>
+            <input class="field__input" id="regPassword" name="regPassword" type="password" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
+          </label>
+
+          <button class="cta" type="submit" style="--i:5">
+            <span>Créer mon compte</span>
+            <span class="cta__arrow" aria-hidden="true">→</span>
+          </button>
+
+          <p class="error" id="registerMsg" role="status" aria-live="polite" style="--i:6"></p>
+
+          <div class="switchRow" aria-label="Retour connexion" style="--i:7">
+            <span class="switchRow__txt">Déjà un compte ?</span>
+            <button class="linkbtn" type="button" id="backToLogin">Se connecter</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script defer src="assets/register.20260308-1.js"></script>
+</body>
+</html>
